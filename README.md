@@ -27,6 +27,12 @@ trigger binding or a Logic Apps workflow.
 | TypeScript | [src/typescript](src/typescript) | Express / Node.js 24 |
 | Python | [src/python](src/python) | FastAPI / Python 3.14 |
 
+**Looking for a complete .NET workflow?** See the separate
+[ASP.NET Core email-triage sample](https://github.com/Azure-Samples/app-service-connectors-net-e2e-email-users-teams),
+which receives Outlook events, enriches the sender through Office 365 Users,
+posts a Teams notification, and flags the email. The C# sample above is the
+minimal equivalent of the other language samples in this repository.
+
 Each sample handles `POST /api/webhook`, validates the batch in `body.value`,
 and flags only messages whose subject starts with `TEST_SUBJECT_PREFIX`
 (default: `[connector-pivots]`). Other messages are counted but not modified.
