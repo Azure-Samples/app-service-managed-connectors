@@ -1,4 +1,4 @@
-# Contributing to [project-title]
+# Contributing to App Service managed connectors
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
@@ -47,14 +47,15 @@ chances of your issue being dealt with quickly:
 * **Suggest a Fix** - if you can't fix the bug yourself, perhaps you can point to what might be
   causing the problem (line of code or commit)
 
-You can file new issues by providing the above information at the corresponding repository's issues link: 
-replace`[organization-name]` and `[repository-name]` in
-`https://github.com/[organization-name]/[repository-name]/issues/new` .
+You can file new issues at
+https://github.com/Azure-Samples/app-service-managed-connectors/issues/new.
+Do not include tokens, consent URLs, email contents, or other private data.
+For vulnerabilities, follow [our security reporting guidance](SECURITY.md).
 
 ### <a name="submit-pr"></a> Submitting a Pull Request (PR)
 Before you submit your Pull Request (PR) consider the following guidelines:
 
-* Search the repository's [pull requests](https://github.com/[organization-name]/[repository-name]/pulls) for an open or closed PR
+* Search the repository's [pull requests](https://github.com/Azure-Samples/app-service-managed-connectors/pulls) for an open or closed PR
   that relates to your submission. You don't want to duplicate effort.
 
 * Make your changes in a new git fork:
@@ -72,3 +73,11 @@ Before you submit your Pull Request (PR) consider the following guidelines:
     ```
 
 That's it! Thank you for your contribution!
+
+## Local validation
+
+Follow the dependency installation and local checks in [README.md](README.md#get-the-samples-and-run-local-checks).
+Changes to one language should preserve the equivalent behavior in the others.
+The shared payload tests cover validation, filtering, and action failures.
+CI does not deploy to Azure or exercise a real mailbox; distinguish local test
+results from live connector verification in your pull request.

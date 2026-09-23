@@ -1,0 +1,16 @@
+{
+  "name": "app-service-connectors-javascript",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "start": "node server.js",
+    "test": "SAMPLE_LANGUAGE=javascript node --test ../../tests/node.test.mjs"
+  },
+  "dependencies": {
+    "@azure/connectors": "0.2.0-preview",
+    "@azure/identity": "4.13.3",
+    "express": "5.2.1"
+  }
+}

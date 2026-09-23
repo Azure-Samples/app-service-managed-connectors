@@ -1,0 +1,20 @@
+{
+  "mixed": {
+    "body": {
+      "value": [
+        { "id": "test-1", "subject": "[connector-pivots] first" },
+        { "id": "ordinary-1", "subject": "Unrelated message" },
+        { "id": "test-2", "subject": "[connector-pivots] second" }
+      ]
+    }
+  },
+  "empty": { "body": { "value": [] } },
+  "invalid": [
+    null,
+    {},
+    { "body": { "value": "bad" } },
+    { "body": { "value": [null] } },
+    { "body": { "value": [{ "subject": "[connector-pivots] no ID" }] } },
+    { "body": { "value": [{ "id": "1", "subject": 7 }] } }
+  ]
+}

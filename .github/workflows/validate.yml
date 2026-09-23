@@ -1,0 +1,44 @@
+name: Validate samples
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  samples:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Install dependencies
+        run: |
+          npm ci --prefix src/javascript
+          npm ci --prefix src/typescript
+          python3 -m venv src/python/.venv
+          src/python/.venv/bin/python -m pip install -r src/python/requirements.txt
+      - name: Run language checks
+        run: |
+          npm test --prefix src/javascript
+          npm test --prefix src/typescript
+          src/python/.venv/bin/python -m unittest discover -s tests -p test_python.py -v
+          dotnet run --project tests/dotnet/Checks.csproj -- tests/payloads.json
+      - name: Exercise local HTTP endpoints
+        run: python3 tests/local_smoke.py
+      - name: Validate infrastructure and helper syntax
+        run: |
+          az bicep build --file infra/main.bicep --stdout > /dev/null
+          python3 -m py_compile infra/create-triggers.py tests/cloud_verify.py

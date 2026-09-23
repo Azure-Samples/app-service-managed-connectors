@@ -1,0 +1,22 @@
+{
+  "name": "app-service-connectors-typescript",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "npm run build && SAMPLE_LANGUAGE=typescript node --test ../../tests/node.test.mjs"
+  },
+  "dependencies": {
+    "@azure/connectors": "0.2.0-preview",
+    "@azure/identity": "4.13.3",
+    "express": "5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^24.0.0",
+    "typescript": "7.0.2"
+  }
+}
