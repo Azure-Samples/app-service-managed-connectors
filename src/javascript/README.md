@@ -14,8 +14,9 @@ npm test --prefix src/javascript
 ```
 
 Follow the shared [setup and deployment instructions](../../README.md#deploy-to-azure)
-to provision the authenticated app and its connector. After provisioning, deploy
-this language with `azd deploy javascript --no-prompt`.
+to provision only this authenticated app and its connector. From the repository
+root, run `cd src/javascript`, create an AZD environment, then run `azd provision`
+and `azd deploy`. This folder's `azure.yaml` does not deploy the other languages.
 
 Use `ManagedIdentityTokenProvider` and `flagAsync(input, messageId)` with this SDK
 version. Local tests replace the outbound action and do not implement Easy Auth.

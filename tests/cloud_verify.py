@@ -32,8 +32,9 @@ trigger_identity = az("identity", "show", "--ids", env["TRIGGER_IDENTITY_ID"])
 expected_principals = {trigger_identity["principalId"]}
 connection = arm(namespace_id + "/connections/" + env["OFFICE365_CONNECTION_NAME"])
 assert connection["properties"]["overallStatus"] == "Connected"
-results = []
-for app in json.loads(env["APPLICATIONS"]):
+
+
+def verify_app(app):
     identity = az("identity", "show", *scope, "-n", "id-" + app["name"])
     expected_principals.add(identity["principalId"])
     settings = {s["name"]: s["value"] for s in az(
@@ -80,13 +81,16 @@ for app in json.loads(env["APPLICATIONS"]):
     assert output["statusCode"] == 200, (trigger_name, output["statusCode"])
     assert output["body"]["received"] >= 1
     assert output["body"]["flagged"] >= 1
-    results.append({
+    return {
         "language": app["language"], "endpoint": app["url"],
         "runId": runs[0]["id"], "callbackStatus": output["statusCode"],
         "received": output["body"]["received"], "flagged": output["body"]["flagged"],
         "unauthenticatedStatus": 401, "invalidTokenStatus": 401,
-    })
+    }
+
+
+result = verify_app(json.loads(env["APPLICATION"]))
 policies = arm(namespace_id + "/connections/" + env["OFFICE365_CONNECTION_NAME"] + "/accessPolicies")
 actual_principals = {p["properties"]["principal"]["identity"]["objectId"] for p in policies["value"]}
 assert actual_principals == expected_principals
-print(json.dumps({"results": results, "connectionAccessPolicies": "exactly five expected identities"}, indent=2))
+print(json.dumps({"result": result, "connectionAccessPolicies": "exactly two expected identities"}, indent=2))

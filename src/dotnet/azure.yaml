@@ -1,0 +1,9 @@
+name: app-service-connectors-dotnet
+infra:
+  path: ../../infra
+  module: dotnet
+services:
+  dotnet:
+    project: .
+    language: dotnet
+    host: appservice

@@ -1,0 +1,9 @@
+name: app-service-connectors-javascript
+infra:
+  path: ../../infra
+  module: javascript
+services:
+  javascript:
+    project: .
+    language: js
+    host: appservice

@@ -14,8 +14,9 @@ dotnet run --project tests/dotnet/Checks.csproj -- tests/payloads.json
 ```
 
 Follow the shared [setup and deployment instructions](../../README.md#deploy-to-azure)
-to provision the authenticated app and its connector. After provisioning, deploy
-this language with `azd deploy dotnet --no-prompt`.
+to provision only this authenticated app and its connector. From the repository
+root, run `cd src/dotnet`, create an AZD environment, then run `azd provision`
+and `azd deploy`. This folder's `azure.yaml` does not deploy the other languages.
 
 Local tests replace the outbound action. Local ASP.NET Core does not implement
 the deployed Easy Auth policy. See the shared [authentication model](../../README.md#architecture-and-authentication)

@@ -1,4 +1,4 @@
-"""Create the four test-only triggers after Outlook consent."""
+"""Create the selected app's test-only trigger after Outlook consent."""
 
 import json
 import subprocess
@@ -24,14 +24,13 @@ connection = run_json(
 if connection["properties"]["overallStatus"] != "Connected":
     raise RuntimeError("Complete Outlook consent before creating triggers.")
 
+app = json.loads(env["APPLICATION"])
 existing = run_json("az", "connector-namespace", "trigger", "list", *scope, "-o", "json")
 existing_names = {trigger["name"] for trigger in existing}
-apps = json.loads(env["APPLICATIONS"])
-for app in apps:
-    name = f"validation-{app['language']}"
-    if name in existing_names:
-        print(f"{name}: already exists; not modified")
-        continue
+name = f"validation-{app['language']}"
+if name in existing_names:
+    print(f"{name}: already exists; not modified")
+else:
     result = run_json(
         "az", "connector-namespace", "trigger", "create", *scope,
         "--name", name,

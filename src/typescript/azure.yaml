@@ -1,0 +1,9 @@
+name: app-service-connectors-typescript
+infra:
+  path: ../../infra
+  module: typescript
+services:
+  typescript:
+    project: .
+    language: ts
+    host: appservice

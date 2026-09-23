@@ -15,8 +15,9 @@ src/python/.venv/bin/python -m unittest discover -s tests -p test_python.py -v
 ```
 
 Follow the shared [setup and deployment instructions](../../README.md#deploy-to-azure)
-to provision the authenticated app and its connector. After provisioning, deploy
-this language with `azd deploy python --no-prompt`.
+to provision only this authenticated app and its connector. From the repository
+root, run `cd src/python`, create an AZD environment, then run `azd provision`
+and `azd deploy`. This folder's `azure.yaml` does not deploy the other languages.
 
 The configured startup command is
 `python -m uvicorn main:app --host 0.0.0.0 --port 8000`. Use the SDK's

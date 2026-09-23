@@ -1,0 +1,9 @@
+name: app-service-connectors-python
+infra:
+  path: ../../infra
+  module: python
+services:
+  python:
+    project: .
+    language: python
+    host: appservice

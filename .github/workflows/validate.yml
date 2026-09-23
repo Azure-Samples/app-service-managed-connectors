@@ -40,5 +40,5 @@ jobs:
         run: python3 tests/local_smoke.py
       - name: Validate infrastructure and helper syntax
         run: |
-          az bicep build --file infra/main.bicep --stdout > /dev/null
+          python3 -m unittest discover -s tests -p test_deployment.py -v
           python3 -m py_compile infra/create-triggers.py tests/cloud_verify.py

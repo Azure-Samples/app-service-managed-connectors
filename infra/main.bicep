@@ -6,24 +6,27 @@ extension microsoftGraphV1
 @maxLength(40)
 param environmentName string
 param location string
+@allowed(['dotnet', 'javascript', 'typescript', 'python'])
+param sampleLanguage string
 param createConnectorNamespace bool = true
 param serviceManagementReference string = ''
 param testSubjectPrefix string = '[connector-pivots]'
 
-var suffix = take(uniqueString(subscription().id, environmentName), 10)
+var suffix = take(uniqueString(subscription().id, environmentName, sampleLanguage), 10)
 var tags = {
   'azd-env-name': environmentName
   purpose: 'managed-connector-documentation-validation'
 }
-var languages = [
-  { name: 'dotnet', runtime: 'DOTNETCORE|10.0', startup: '' }
-  { name: 'javascript', runtime: 'NODE|24-lts', startup: 'npm start' }
-  { name: 'typescript', runtime: 'NODE|24-lts', startup: 'npm start' }
-  { name: 'python', runtime: 'PYTHON|3.14', startup: 'python -m uvicorn main:app --host 0.0.0.0 --port 8000' }
-]
+var configurations = {
+  dotnet: { runtime: 'DOTNETCORE|10.0', startup: '' }
+  javascript: { runtime: 'NODE|24-lts', startup: 'npm start' }
+  typescript: { runtime: 'NODE|24-lts', startup: 'npm start' }
+  python: { runtime: 'PYTHON|3.14', startup: 'python -m uvicorn main:app --host 0.0.0.0 --port 8000' }
+}
+var configuration = configurations[sampleLanguage]
 
 resource rg 'Microsoft.Resources/resourceGroups@2025-04-01' = {
-  name: 'rg-${environmentName}'
+  name: 'rg-${environmentName}-${sampleLanguage}'
   location: location
   tags: tags
 }
@@ -63,22 +66,22 @@ module namespace './namespace.bicep' = {
   }
 }
 
-module apps './app.bicep' = [for lang in languages: {
-  name: 'app-${lang.name}'
+module app './app.bicep' = {
+  name: 'app-${sampleLanguage}'
   scope: rg
   params: {
-    name: 'app-${lang.name}-${suffix}'
+    name: 'app-${sampleLanguage}-${suffix}'
     location: location
-    tags: union(tags, { 'azd-service-name': lang.name })
+    tags: union(tags, { 'azd-service-name': sampleLanguage })
     planId: plan.outputs.resourceId
-    runtime: lang.runtime
-    startup: lang.startup
+    runtime: configuration.runtime
+    startup: configuration.startup
     connectionRuntimeUrl: namespace.outputs.connectionRuntimeUrl
     triggerPrincipalId: triggerIdentity.outputs.principalId
     testSubjectPrefix: testSubjectPrefix
     serviceManagementReference: serviceManagementReference
   }
-}]
+}
 
 module policies './policies.bicep' = {
   name: 'connection-access'
@@ -87,7 +90,7 @@ module policies './policies.bicep' = {
     namespaceName: namespace.outputs.name
     connectionName: namespace.outputs.connectionName
     triggerPrincipalId: triggerIdentity.outputs.principalId
-    principalIds: [for (lang, i) in languages: apps[i].outputs.principalId]
+    principalIds: [app.outputs.principalId]
   }
 }
 
@@ -97,10 +100,10 @@ output OFFICE365_CONNECTION_NAME string = namespace.outputs.connectionName
 output OFFICE365_CONNECTION_RUNTIME_URL string = namespace.outputs.connectionRuntimeUrl
 output TRIGGER_IDENTITY_ID string = triggerIdentity.outputs.resourceId
 output TEST_SUBJECT_PREFIX string = testSubjectPrefix
-output APPLICATIONS array = [for (lang, i) in languages: {
-  language: lang.name
-  name: apps[i].outputs.name
-  url: apps[i].outputs.url
-  audience: apps[i].outputs.audience
-  clientId: apps[i].outputs.clientId
-}]
+output APPLICATION object = {
+  language: sampleLanguage
+  name: app.outputs.name
+  url: app.outputs.url
+  audience: app.outputs.audience
+  clientId: app.outputs.clientId
+}

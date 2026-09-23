@@ -76,7 +76,7 @@ That's it! Thank you for your contribution!
 
 ## Local validation
 
-Follow the dependency installation and local checks in [README.md](README.md#get-the-samples-and-run-local-checks).
+Follow the dependency installation and local checks in [README.md](README.md#run-local-checks-optional).
 Changes to one language should preserve the equivalent behavior in the others.
 The shared payload tests cover validation, filtering, and action failures.
 CI does not deploy to Azure or exercise a real mailbox; distinguish local test
